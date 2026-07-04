@@ -1,13 +1,29 @@
 console.log("🧠 [SemanticEdge] Service Worker inicializado y escuchando...");
 
-// Escuchamos los mensajes que envían los sensores desde las pestañas
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "ANALIZAR_TEXTO") {
-    console.log(`🔍 Recibido texto para analizar de la URL: ${request.url}`);
-    console.log(`📄 Fragmento del contenido: "${request.text.substring(0, 100)}..."`);
-    
-    // TODO: Aquí implementaremos el Protocolo de Inferencia con Gemini Nano
-    // y el desempate con FastAPI si entra en la zona de duda.
+    // 1. Ahora imprimimos el texto completo que viene de la web sin cortarlo
+    console.log(`🔍 URL analizada: ${request.url}`);
+    console.log(`📄 Texto completo recibido de la web:`, request.text);
+
+    // 2. Enviamos los datos reales a nuestro servidor FastAPI en el puerto 8000
+    fetch("http://127.0.0.1:8000/verificar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        url: request.url,
+        text: request.text
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log("📡 [Respuesta de FastAPI]:", data);
+    })
+    .catch(error => {
+      console.error("❌ Error al conectar con FastAPI:", error);
+    });
   }
   return true;
 });

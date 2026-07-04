@@ -1,33 +1,48 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-# Inicializamos la aplicación FastAPI
-app = FastAPI(
-    title="SemanticEdge Gateway",
-    description="Pasarela segura de validación cruzada y enriquecimiento técnico",
-    version="1.0.0"
+app = FastAPI(title="SemanticEdge Gateway", version="1.0.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-# Definimos la estructura de los datos que esperamos recibir del navegador
+# 🗄️ NUESTRA BASE DE DATOS DE PRUEBA (Simulada)
+# Aquí registramos ejemplos de phishing y sitios seguros para testear
+BASE_DE_DATOS_LOCAL = {
+    "paypal-seguridad-alerta.com": {"action": "BLOCK", "verdict": "Phishing detectado...", "score": 85},
+    "bing.com": {"action": "BLOCK", "verdict": "SITIO RESTRINGIDO POR POLÍTICA DE SEGURIDAD.", "score": 95}, # 👈 Añadimos este de prueba
+    "wikipedia.org": {"action": "ALLOW", "verdict": "Sitio seguro verificado.", "score": 0},
+}
+
 class AnalisisRequest(BaseModel):
     url: str
     text: str
 
-@app.get("/")
-async def inicio():
-    """Ruta de control para verificar que el servidor está encendido."""
-    return {"status": "online", "message": "SemanticEdge Gateway operando correctamente"}
-
 @app.post("/verificar")
 async def verificar_dominio(payload: AnalisisRequest):
-    """Endpoint que recibirá las solicitudes del Nivel 2 (Extensión)."""
-    print(f"📡 [FastAPI] Petición entrante para analizar la URL: {payload.url}")
+    print(f"📡 [FastAPI] Petición entrante para: {payload.url}")
     
-    # Por ahora simulamos la respuesta del backend (Mock response)
-    # En los siguientes pasos implementaremos la consulta real a VirusTotal y la caché
+    # Buscamos si alguna de nuestras palabras clave de la BD está en la URL del usuario
+    for dominio_sospechoso, resultado in BASE_DE_DATOS_LOCAL.items():
+        if dominio_sospechoso in payload.url.lower():
+            print(f"🎯 ¡Coincidencia en BD local! Resultado: {resultado['action']}")
+            return {
+                "status": "success",
+                "action": resultado["action"],
+                "verdict": resultado["verdict"],
+                "score": resultado["score"]
+            }
+            
+    # Si no está en nuestra base de datos, por defecto la dejamos pasar (ALLOW)
     return {
         "status": "success",
-        "action": "ALLOW",  # Opciones futuras: ALLOW, WARN, BLOCK
-        "verdict": "Dominio seguro (Simulación temporal)",
+        "action": "ALLOW",
+        "verdict": "No encontrado en la lista negra local. Permitido temporalmente.",
         "score": 0
     }
