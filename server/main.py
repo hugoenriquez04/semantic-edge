@@ -40,3 +40,8 @@ async def check_url(payload: URLCheckRequest):
             "harmless": 90 if not is_suspicious else 10
         }
     }
+
+if __name__ == "__main__":
+    import uvicorn
+    # Pasamos el objeto app directamente para evitar fallos de rutas en el ejecutable
+    uvicorn.run(app, host="127.0.0.1", port=8000)
