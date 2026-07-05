@@ -4,42 +4,95 @@
   <meta charset="UTF-8">
   <title>SemanticEdge Status</title>
   <style>
+    :root {
+      --bg-color: #f8f9fa;
+      --text-color: #202124;
+      --text-muted: #5f6368;
+      --text-light: #70757a;
+      --card-bg: #ffffff;
+      --border-color: #dadce0;
+      --version-bg: #e8eaed;
+      --shadow: rgba(60, 64, 67, 0.15);
+      
+      --accent-blue: #1a73e8;
+      --accent-green: #1aa251;
+      --accent-yellow: #f1c40f;
+      --accent-red: #d93025;
+      
+      --bg-green-alpha: rgba(26, 162, 81, 0.08);
+      --bg-blue-alpha: rgba(26, 115, 232, 0.05);
+      --bg-yellow-alpha: rgba(241, 196, 15, 0.08);
+      --bg-red-alpha: rgba(217, 48, 37, 0.05);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-color: #0b0c10;
+        --text-color: #ffffff;
+        --text-muted: #8a90a0;
+        --text-light: #626875;
+        --card-bg: #12131a;
+        --border-color: #1f232d;
+        --version-bg: #1f232d;
+        --shadow: rgba(0, 0, 0, 0.4);
+        
+        --accent-blue: #1a73e8;
+        --accent-green: #1aa251;
+        --accent-yellow: #f1c40f;
+        --accent-red: #e64d49;
+        
+        --bg-green-alpha: rgba(26, 162, 81, 0.15);
+        --bg-blue-alpha: rgba(26, 115, 232, 0.08);
+        --bg-yellow-alpha: rgba(241, 196, 15, 0.15);
+        --bg-red-alpha: rgba(230, 77, 73, 0.08);
+      }
+    }
+
     body {
-      width: 260px;
+      width: 300px;
       margin: 0;
       padding: 16px;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #f8f9fa;
-      color: #202124;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
     }
     .header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid #dadce0;
+      border-bottom: 1px solid var(--border-color);
       padding-bottom: 10px;
       margin-bottom: 12px;
     }
     .title {
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 700;
-      color: #1a73e8;
+      color: var(--accent-blue);
       margin: 0;
+      letter-spacing: 0.5px;
     }
     .version {
-      font-size: 11px;
-      color: #70757a;
-      background-color: #e8eaed;
+      font-size: 10px;
+      color: var(--text-muted);
+      background-color: var(--version-bg);
       padding: 2px 6px;
       border-radius: 4px;
+      font-weight: 600;
+    }
+    .section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--text-light);
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin: 14px 0 6px 0;
     }
     .status-card {
-      background-color: #ffffff;
-      border: 1px solid #dadce0;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
       border-radius: 8px;
       padding: 12px;
-      box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3);
-      text-align: left;
+      box-shadow: 0 2px 6px var(--shadow);
     }
     .status-item {
       display: flex;
@@ -52,25 +105,115 @@
       margin-bottom: 0;
     }
     .label {
-      color: #5f6368;
+      color: var(--text-muted);
     }
     .value {
       font-weight: 600;
     }
     .badge-active {
-      color: #1aa251;
-      background-color: #e6f4ea;
+      color: var(--accent-green);
+      background: var(--bg-green-alpha);
+      border: 1px solid rgba(26, 162, 81, 0.2);
       padding: 2px 8px;
       border-radius: 12px;
       font-size: 11px;
       text-transform: uppercase;
     }
-    .footer {
-      margin-top: 12px;
-      font-size: 10px;
-      color: #70757a;
+    
+    .site-box {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-left: 4px solid var(--accent-blue);
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      word-break: break-all;
+      box-shadow: 0 2px 4px var(--shadow);
+    }
+
+    .btn-action {
+      width: 100%;
+      background-color: var(--accent-blue);
+      color: #ffffff;
+      border: none;
+      padding: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+      box-shadow: 0 2px 4px var(--shadow);
+      transition: background-color 0.2s ease;
+    }
+    .btn-action:hover { opacity: 0.9; }
+    
+    /* CONSOLA DE EXPLICABILIDAD XAI (JSON SCHEMA VALIDADO) */
+    .xai-box {
+      display: none;
+      background-color: #12131a;
+      border: 1px solid #1f232d;
+      border-radius: 6px;
+      padding: 10px;
+      margin-top: 8px;
+      font-family: monospace;
+      font-size: 11px;
+      color: #39e75f;
+      white-space: pre-wrap;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .metric-box {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px;
       text-align: center;
-      border-top: 1px dashed #dadce0;
+      box-shadow: 0 2px 4px var(--shadow);
+    }
+    .metric-num {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-color);
+      margin-bottom: 2px;
+    }
+    .metric-lbl { font-size: 10px; color: var(--text-muted); }
+    
+    .profile-container { display: flex; flex-direction: column; gap: 6px; }
+    .profile-container input[type="radio"] { display: none; }
+    .profile-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .profile-name { font-size: 12px; font-weight: 600; color: var(--text-color); }
+    .profile-desc { font-size: 10px; color: var(--text-muted); line-height: 1.2; margin-top: 2px; }
+
+    #opt-alerta:checked + .profile-card { border-color: var(--accent-yellow); background: var(--bg-yellow-alpha); }
+    #opt-alerta:checked + .profile-card .profile-name { color: var(--accent-yellow); }
+
+    #opt-balanceado:checked + .profile-card { border-color: var(--accent-blue); background: var(--bg-blue-alpha); }
+    #opt-balanceado:checked + .profile-card .profile-name { color: var(--accent-blue); }
+
+    #opt-restrictivo:checked + .profile-card { border-color: var(--accent-red); background: var(--bg-red-alpha); }
+    #opt-restrictivo:checked + .profile-card .profile-name { color: var(--accent-red); }
+
+    .footer {
+      margin-top: 14px;
+      font-size: 9px;
+      color: var(--text-light);
+      text-align: center;
+      border-top: 1px solid var(--border-color);
       padding-top: 8px;
     }
   </style>
@@ -81,6 +224,12 @@
     <span class="version">v1.0 MVP</span>
   </div>
   
+  <div class="section-title">Entorno de Navegación Activo</div>
+  <div class="site-box" id="site-display">Detectando sitio operativo...</div>
+  <button class="btn-action" id="btn-scan">Forzar Análisis Forense (DOM)</button>
+  <div class="xai-box" id="xai-display"></div>
+
+  <div class="section-title">Estado del Sistema</div>
   <div class="status-card">
     <div class="status-item">
       <span class="label">Agente de Escucha:</span>
@@ -88,16 +237,59 @@
     </div>
     <div class="status-item">
       <span class="label">Análisis de URLs:</span>
-      <span class="value" style="color: #1a73e8;">Tiempo Real</span>
+      <span class="value" style="color: var(--accent-blue);">Tiempo Real</span>
     </div>
     <div class="status-item">
       <span class="label">Pipeline de IA:</span>
-      <span class="value" style="color: #e67c73;">Híbrido (Dual)</span>
+      <span class="value" style="color: var(--accent-red);">Híbrido (Dual)</span>
     </div>
+  </div>
+  
+  <div class="section-title">Telemetría Operacional (Live)</div>
+  <div class="metric-grid">
+    <div class="metric-box">
+      <div class="metric-num" id="m-auditados">142</div>
+      <div class="metric-lbl">DOM Auditados</div>
+    </div>
+    <div class="metric-box">
+      <div class="metric-num" id="m-bloqueos">0</div>
+      <div class="metric-lbl">Ataques Frenados</div>
+    </div>
+    <div class="metric-box">
+      <div class="metric-num" id="m-latencia">14ms</div>
+      <div class="metric-lbl">Latencia Media</div>
+    </div>
+    <div class="metric-box">
+      <div class="metric-num" id="m-cache">88%</div>
+      <div class="metric-lbl">Ahorro API (Caché)</div>
+    </div>
+  </div>
+  
+  <div class="section-title">Rigor Defensivo (Políticas)</div>
+  <div class="profile-container">
+    <input type="radio" id="opt-alerta" name="defensive-profile" value="alerta">
+    <label for="opt-alerta" class="profile-card">
+      <span class="profile-name">Perfil de Alerta (Permisivo)</span>
+      <span class="profile-desc">Audita y notifica visualmente sin interrupciones.</span>
+    </label>
+
+    <input type="radio" id="opt-balanceado" name="defensive-profile" value="balanceado">
+    <label for="opt-balanceado" class="profile-card">
+      <span class="profile-name">Perfil Balanceado (Estándar)</span>
+      <span class="profile-desc">Muros activos ante detecciones críticas del pipeline.</span>
+    </label>
+
+    <input type="radio" id="opt-restrictivo" name="defensive-profile" value="restrictivo">
+    <label for="opt-restrictivo" class="profile-card">
+      <span class="profile-name">Perfil Restrictivo (Zero-Trust)</span>
+      <span class="profile-desc">Bloqueo proactivo preventivo en formularios de credenciales.</span>
+    </label>
   </div>
   
   <div class="footer">
     Cátedra Ciberseguridad · Universidad de Málaga & VirusTotal
   </div>
+
+  <script src="popup.js"></script>
 </body>
 </html>

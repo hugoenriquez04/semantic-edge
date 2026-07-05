@@ -1,10 +1,19 @@
-# server/main.py
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 app = FastAPI(
     title="SemanticEdge Enrichment Server",
     description="Nodo centralizado de enriquecimiento analítico para la Cátedra de Ciberseguridad"
+)
+
+# Habilitar CORS para evitar bloqueos del navegador durante las llamadas del agente
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 class URLCheckRequest(BaseModel):
@@ -16,20 +25,16 @@ def read_root():
 
 @app.post("/api/v1/check-url")
 async def check_url(payload: URLCheckRequest):
-    """
-    Endpoint perimetral. Recibe la URL del cliente, consulta la caché local
-    y actúa como pasarela con la API de VirusTotal.
-    """
     url_solicitada = payload.url
     
-    # Simulación de respuesta analítica (Fase MVP)
-    # Aquí se integrará la llamada asíncrona a VirusTotal en Julio/Agosto
-    is_suspicious = any(keyword in url_solicitada.lower() for keyword in ["malware", "phishing", "fake"])
+    # Detonadores de prueba del MVP para forzar veredicto "MALICIOUS" en tu video/fotos
+    palabras_criticas = ["malware", "phishing", "fake", "suspension", "secure-login", "verifirma"]
+    is_suspicious = any(keyword in url_solicitada.lower() for keyword in palabras_criticas)
     
     return {
         "url": url_solicitada,
         "verdict": "MALICIOUS" if is_suspicious else "CLEAN",
-        "provider": "VirusTotal Simulated Mock",
+        "provider": "VirusTotal Core Gateway (Simulated MVP)",
         "engine_score": {
             "malicious": 1 if is_suspicious else 0,
             "harmless": 90 if not is_suspicious else 10
