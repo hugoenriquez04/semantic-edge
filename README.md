@@ -1,56 +1,62 @@
-# SemanticEdge 🛡️🧠
+# SemanticEdge 🛡️🤖
+### Módulo Perimetral Híbrido de Inferencia Semántica contra Phishing Avanzado e Ingeniería Social
 
-### Ciberdefensa Perimetral Inteligente contra Phishing Avanzado y Vectores Cognitivos mediante IA Local (Chrome Built-in AI) y Pasarela Asíncrona en FastAPI
-
-SemanticEdge es un Producto Mínimo Viable (MVP) diseñado para la **Cátedra de Ciberseguridad de la Universidad de Málaga (UMA) & VirusTotal**. Rompe con el paradigma de la seguridad estática tradicional, trasladando la capacidad analítica directamente al *endpoint* mediante un modelo de *Edge Computing* distribuido de coste marginal cero.
-
----
-
-## 📺 Demostración del Sistema (Vídeo MVP)
-
-Para ver el ecosistema defendiendo el navegador en tiempo real frente a un vector de ingeniería social activa, reproduce el siguiente vídeo técnico:
-
-![Demostración en Vivo](assets/demo/demo_semantic_edge.gif)
-*(Vídeo completo disponible en la carpeta `assets/demo/mvp_walkthrough.mp4`)*
+**Proyecto Desarrollado para:** Premios a la Innovación en Ciberseguridad e Inteligencia Artificial (2026)  
+**Convocado por:** Cátedra de Ciberseguridad de la Universidad de Málaga & VirusTotal  
+**Autor:** Hugo Enríquez Jiménez  
+**Titulación:** Doble Grado en Ingeniería Informática y Matemáticas (UMA)
 
 ---
 
-## 🏗️ Arquitectura de Ciberdefensa en Tres Niveles
+## ❓ ¿Qué es SemanticEdge?
 
-El sistema procesa y neutraliza las amenazas en caliente estructurándose en un flujo secuencial asíncrono y desacoplado:
+**SemanticEdge** es un ecosistema de seguridad perimetral de Día Cero diseñado bajo una arquitectura híbrida de tres niveles de triaje. Su objetivo es interceptar vectores de ataque basados en ingeniería social y phishing semántico en tiempo real, antes de que el usuario comprometa sus credenciales.
 
-1. **Nivel 1 (Captura Sintáctica y Sanitización - Cliente):** Una extensión de Google Chrome bajo el estándar **Manifest V3** monitoriza las mutaciones dinámicas del DOM en tiempo real (*MutationObserver*) con soporte nativo para SPAs (como WhatsApp Web o Gmail). Sanitiza el texto eliminando scripts maliciosos (Anti-XSS) antes del análisis.
-2. **Nivel 2 (Inferencia Semántica e IA Local - Service Worker):** El Service Worker de fondo intercepta el texto plano y ejecuta un pipeline condicional. Si pasa el Filtro 0 (heurística rápida), invoca de forma desconectada a la API nativa de Chrome (**Gemini Nano**) mediante *Few-Shot Learning con Demarcación Adaptativa* para identificar coacciones psicológicas y urgencias artificiales con coste cero y bajo el principio *Privacy by Design*.
-3. **Nivel 3 (Pasarela de Enriquecimiento y Firmas - Servidor):** Ante incertidumbres lógicas, el agente interroga de forma asíncrona a un backend desarrollado en **FastAPI**. Este nodo valida el origen corporativo del agente (*Chrome Extension ID*), protege las cuotas analíticas mediante un middleware *Token Bucket* (*Rate Limiting*), gestiona una caché local (*SQLite/Redis* con TTL de 24h) y correlaciona el riesgo con la API global de **VirusTotal**.
+A diferencia de las soluciones convencionales que dependen de listas negras de URLs estáticas (fáciles de evadir por los atacantes), SemanticEdge audita dinámicamente el contenido del Árbol de Objetos del Documento (DOM). Para ello, combina **heurística rápida en el cliente**, el procesamiento de lenguaje natural de la **IA local (Edge AI)** de Google Chrome y el respaldo asíncrono de un **servidor de firmas centralizado**.
 
 ---
 
-## 📸 Capturas de Pantalla de la Interfaz
+## 🛠️ Desglose de Bloques Operacionales y Componentes Críticos
 
-### Dashboard de Control Adaptativo (Popup UI)
-La interfaz gráfica de la extensión implementa un diseño cibernético y reactivo, adaptándose de forma nativa al tema claro u oscuro (Light/Dark Mode) del sistema operativo. Muestra la telemetría operacional en vivo y permite alternar el rigor defensivo entre tres perfiles (*Alerta, Balanceado y Restrictivo*).
+El núcleo de la solución se segmenta en los siguientes subsistemas funcionales:
 
-<p align="center">
-  <img src="assets/images/popup_ui_dark.png" width="45%" alt="Popup UI Modo Oscuro">
-  <img src="assets/images/popup_ui_light.png" width="45%" alt="Popup UI Modo Claro">
-</p>
+### 1. `client/background.js` (Orquestador del Pipeline de Inferencia Local)
+Este Service Worker actúa como el núcleo lógico del agente perimetral en segundo plano:
+* Monitoriza de forma asíncrona los eventos analíticos emitidos desde las pestañas web activas.
+* Conmutación dinámica entre políticas de mitigación bajo demanda del usuario (*Alerta, Balanceado y Restrictivo Zero-Trust*).
+* **Inferencia Semántica:** Orquesta la sesión nativa con el LLM local **Gemini Nano** integrado en el navegador, inyectando un *system prompt* especializado en auditoría forense para contextualizar heurísticamente el flujo de texto plano del DOM de forma 100% privada.
 
-### Muro de Contención Activa (Pantalla de Bloqueo)
-Cuando el pipeline de inferencia semántica confirma un riesgo crítico de fraude o phishing, inyecta dinámicamente una pantalla de bloqueo aislada a pantalla completa sobre el DOM de la pestaña, neutralizando el vector de ataque antes de que el usuario ceda credenciales corporativas.
+### 2. `client/content.js` (Sensor Perimetral del DOM e Inyector de Contención)
+Constituye la sonda táctica desplegada directamente en el contexto de ejecución de las páginas web:
+* Extrae el contenido textual estructurado del DOM de manera reactiva al inicializarse la carga de la página.
+* Actúa como actuador de contención inmediata: si el orquestador determina un veredicto malicioso, detiene en seco el hilo de ejecución visual mediante `window.stop()` e inyecta un **Muro de Aislamiento Crítico a pantalla completa**, neutralizando la interacción del usuario con la amenaza.
 
-![Muro de Contención](assets/images/muro_bloqueo.png)
+### 3. `server/main.py` (API Gateway Centralizado y Pasarela Fail-Safe)
+Es el nodo del backend desarrollado sobre una arquitectura síncrona/asíncrona de alto rendimiento con FastAPI:
+* Proporciona resiliencia al agente cliente actuando como pasarela de contingencia offline o enriquecimiento de firmas cruzadas si la IA del perímetro experimenta degradación.
+* Procesa payloads mediante un endpoint POST (`/api/v1/check-url`), evaluando la URL contra una matriz lógica de firmas maliciosas simuladas para simular el ecosistema transaccional de VirusTotal.
+
+### 4. `client/popup.js` & `popup.html` (Módulo de Telemetría e IA Explicable - XAI)
+Representa la capa de abstracción y analítica visual expuesta al usuario:
+* Renderiza métricas operacionales críticas en tiempo real (volumen de DOMs auditados, contadores de mitigación activa y latencia de inferencia local en milisegundos).
+* Dispone de un disparador de auditoría forense bajo demanda que interactúa con la extensión y devuelve un formato analítico estructurado bajo un **JSON Schema estricto**, visibilizando los factores de riesgo de IA de cara a la auditabilidad del sistema.
 
 ---
 
-## 🛠️ Guía de Instalación y Despliegue Local
+## 🚀 Guía de Despliegue Operativo
 
-### 1. Requisitos Previos
-* Google Chrome (Versión estable con soporte para *Chrome Built-in AI*).
-* Python 3.10 o superior.
+### Paso 1: Inicializar el Backend Analítico
+En la raíz del repositorio se integra el script de automatización **`run.bat`**. Simplemente ejecútalo con doble clic:
+* El script automatiza el despliegue del entorno virtual (`venv`), realiza el aprovisionamiento de paquetes a través de `requirements.txt` e inicia el servidor Uvicorn apuntando a la aplicación FastAPI en `http://127.0.0.1:8000`.
 
-### 2. Despliegue del Servidor (FastAPI Backend)
-Navega a la carpeta del servidor, instala las dependencias y arranca el entorno de ejecución asíncrono:
-```bash
-cd server
-pip install -r requirements.txt
-uvicorn main:app --reload
+### Paso 2: Integrar el Agente en Google Chrome
+1. Accede a la sección de extensiones del navegador mediante la URL `chrome://extensions/`.
+2. Activa el flag de **"Modo de desarrollador"** (ubicado en el margen superior derecho).
+3. Selecciona la opción **"Cargar descomprimida"** (margen superior izquierdo).
+4. Apunta el directorio directamente a la carpeta **`client`** de este repositorio.
+
+### Paso 3: Validación del Laboratorio de Pruebas
+1. Navega en un entorno limpio de producción (ej. `google.com`), inicializa el panel de SemanticEdge y corrobora el estado **OK (Verde)** de monitorización pasiva.
+2. Simula un vector de ataque importando el entorno de pruebas local incorporado en `test/banco-fake.html` dentro de una pestaña del navegador.
+3. El sensor interceptará el evento de carga, cruzará los datos con la API Gateway y disparará de forma instantánea el **Muro de Aislamiento**.
+4. Despliega el panel de control sobre la pantalla bloqueada y pulsa **"Forzar Análisis Forense"** para evaluar cómo la consola XAI analiza semánticamente el DOM devolviendo una validación crítica con `risk_level: 94`.
