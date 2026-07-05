@@ -65,6 +65,10 @@ function inyectarMuroDefensivo(motivo) {
     // Añadir interactividad real al botón del muro
     document.getElementById("btn-back-safe").addEventListener("click", () => {
         window.history.back();
+
+        setTimeout(() => {
+            window.location.href = "https://www.google.com";
+        }, 250);
     });
 }
 
